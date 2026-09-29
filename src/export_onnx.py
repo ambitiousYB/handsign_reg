@@ -11,6 +11,7 @@ nhỏ như thế này, và quan trọng hơn là bạn không phải cài PyTorc
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -45,14 +46,21 @@ def main():
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    # Ghi nhãn TRƯỚC khi export, để export có lỗi thì vẫn còn file nhãn
+    out.with_suffix(".labels.json").write_text(
+        json.dumps(idx_to_label, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # PyTorch >= 2.9 mặc định dùng exporter dynamo, cần thêm gói onnxscript và
+    # không nhận dynamic_axes. Exporter cũ (TorchScript) ổn định với LSTM -> ép dùng.
+    kw = {}
+    if "dynamo" in inspect.signature(torch.onnx.export).parameters:
+        kw["dynamo"] = False
     torch.onnx.export(
         model, dummy, str(out),
         input_names=["x"], output_names=["logits"],
         dynamic_axes={"x": {0: "batch"}, "logits": {0: "batch"}},
-        opset_version=args.opset,
+        opset_version=args.opset, **kw,
     )
-    out.with_suffix(".labels.json").write_text(
-        json.dumps(idx_to_label, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # kiểm chứng: đầu ra ONNX phải khớp PyTorch
     try:

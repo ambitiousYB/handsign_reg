@@ -110,6 +110,26 @@ print("\n[ok] Manifest hợp lệ, đường dẫn landmark tồn tại.")
 !cd /kaggle/working/src && python evaluate.py --compare \
     /kaggle/working/runs/bilstm_random /kaggle/working/runs/bilstm_provided
 
+# %%
+# --- Chẩn đoán: vì sao random KHÔNG cao hơn provided? --------------------------
+# Kết quả thực tế: random 84.9% < provided 87.5%, ngược với dự đoán "chia ngẫu
+# nhiên thổi phồng". Giả thuyết: tập test gốc của dataset dễ hơn phần train gốc
+# (vd phần train lẫn video internet). Tách accuracy của run random theo nguồn gốc
+# clip. Phép chia random tất định (seed 42) nên dựng lại được đúng tập test.
+import numpy as np
+from splits import make_splits
+df_all = pd.read_csv(MANIFEST)
+sp = make_splits(df_all, mode="random", seed=42)
+d = np.load("/kaggle/working/runs/bilstm_random/test_preds.npz")
+assert len(d["y"]) == len(sp["test"]), "Không dựng lại được tập test random"
+origin = df_all.iloc[sp["test"]]["split"].astype(str).values
+ok = d["y"] == d["pred"]
+for o in ("train", "test"):
+    m = origin == o
+    print(f"Run random — clip gốc thuộc '{o:5s}': {m.sum():5d} clip, acc {ok[m].mean():.3f}")
+# Nếu acc trên clip gốc 'test' cao hơn hẳn clip gốc 'train' -> tập test gốc dễ
+# hơn, và so sánh random/provided phải diễn giải lại trong báo cáo.
+
 # %% [markdown]
 # ## Phân tích lỗi trên bản provided
 #
@@ -149,7 +169,7 @@ print(pd.DataFrame(rows).to_string(index=False))
 BEST = "/kaggle/working/runs/bilstm_provided/best.pt"
 !pip install -q onnx onnxruntime
 !cd /kaggle/working/src && python export_onnx.py --ckpt "{BEST}" --out /kaggle/working/models/vsl.onnx
-!cp /kaggle/working/runs/bilstm_provided/labels.json /kaggle/working/models/
 !ls -lh /kaggle/working/models/
+# Phải thấy CẢ HAI file vsl.onnx và vsl.labels.json. Thiếu vsl.onnx -> đọc lỗi ngay trên.
 
 # Tải về laptop: vsl.onnx và vsl.labels.json trong tab Output.

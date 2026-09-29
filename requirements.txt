@@ -7,6 +7,7 @@ opencv-python>=4.8
 # --- Trích xuất landmark + demo real-time (laptop, CPU) ---
 mediapipe==0.10.14        # bản 0.10.15+ đã bỏ mp.solutions.holistic
 onnxruntime>=1.16         # suy luận CPU, nhanh hơn torch eager
+pillow>=9                 # vẽ chữ tiếng Việt có dấu lên khung hình (cv2.putText không làm được)
 
 # --- Huấn luyện (Kaggle, GPU). Không cần cài trên laptop ---
 # torch>=2.1

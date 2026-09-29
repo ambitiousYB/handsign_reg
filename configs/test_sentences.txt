@@ -1,18 +1,23 @@
 # Tập câu dùng để quay video test liên tục.
 # Mỗi dòng: chuỗi gloss cách nhau bằng dấu cách, viết HOA, từ ghép nối bằng '-'.
-# Chỉ dùng gloss nằm trong bộ từ vựng bạn đã huấn luyện.
-TÔI ĐI CHỢ
-HÔM-QUA TÔI HỌC
-BẠN ĂN GÌ
-TÔI ĂN THỨC-ĂN
-NGÀY-MAI TÔI ĐI BỆNH-VIỆN
-TÔI MỆT KHÔNG
-BẠN-THÂN TÔI HỌC-SINH
-TÔI ĐI XE-ĐẠP
-HÔM-NAY TÔI VUI
-TÔI UỐNG KHÔNG
-BẠN ĐI ĐÂU
-TÔI XIN-LỖI BẠN
-HÔM-QUA TÔI SỐT
-TÔI NGHỈ-NGƠI
-BẠN NGHE TÔI KHÔNG
+# CHỈ dùng gloss có trong keep_labels.txt (150 gloss đã huấn luyện) — không có
+# TÔI, BẠN, KHÔNG, GÌ... nên chủ ngữ dùng từ xưng hô (EM, ANH, BỐ...).
+# Thứ tự dòng = thứ tự quay: file video thứ i ứng với câu thứ i.
+BÂY-GIỜ EM ĂN XÔI
+CHỦ-NHẬT BỐ ĐI SIÊU-THỊ
+ANH THÍCH XEM TIVI
+MÙA-ĐÔNG THỜI-TIẾT LẠNH
+CHỊ LÀM-VIỆC NGÂN-HÀNG
+THỨ-HAI EM ĐI TRƯỜNG-HỌC
+BÁC-SĨ GIÚP-ĐỠ ÔNG-NỘI
+CÔ NẾM BÁNH-CHƯNG
+BÀ-NỘI ĂN BÚN
+EM MUỐN ĐI CÔNG-VIÊN
+CHÚ THÍCH CHƠI-CỜ
+CHÁU XIN-LỖI BÀ-NỘI
+EM CẢM-ƠN CÔ
+BỐ TỪ-CHỐI ĐI RẠP-CHIẾU-PHIM
+TRUNG-THU CHÁU ĐI THÀNH-PHỐ
+ANH NGHE CA-SĨ HÁT
+CON-CHÓ CHẠY NHANH
+EM THỨC-DẬY SỚM

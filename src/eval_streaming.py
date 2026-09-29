@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -29,6 +30,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config import SEQ_LEN, NOSIGN_LABEL, StreamConfig
 from landmarks import HolisticExtractor, build_window
 from stream import FrameBuffer, Recognizer, SegmentDetector
+
+
+def _norm(g: str) -> str:
+    """Nhãn -> dạng gloss: 'Xe đạp' -> 'XE-ĐẠP' (giống GlossTranslator._norm)."""
+    return re.sub(r"\s+", "-", g.strip()).upper()
 
 
 def edit_ops(ref: list[str], hyp: list[str]) -> tuple[int, int, int]:
@@ -99,7 +105,7 @@ def run_video(path: Path, rec: Recognizer, cfg: StreamConfig,
                 margin = conf - float(prob[order[1]]) if len(order) > 1 else conf
                 if (name != NOSIGN_LABEL and conf >= cfg.conf_threshold
                         and margin >= cfg.margin_threshold):
-                    out.append(name)
+                    out.append(_norm(name))
                     # độ trễ = số frame yên tĩnh phải chờ + thời gian suy luận
                     lat.append(cfg.quiet_frames / fps + (time.time() - t0))
     dur = frame_i / fps
@@ -125,7 +131,9 @@ def main():
         cfg.conf_threshold = args.conf
     rec = Recognizer(args.ckpt, backend=args.backend)
 
-    refs = [l.strip().split() for l in
+    # Câu tham chiếu viết dạng XE-ĐẠP, còn mô hình trả nhãn gốc "Xe đạp" ->
+    # phải đưa cả hai về cùng một dạng, nếu không thì không bao giờ khớp.
+    refs = [[_norm(g) for g in l.strip().split()] for l in
             Path(args.refs).read_text(encoding="utf-8").splitlines()
             if l.strip() and not l.startswith("#")]
     vids = sorted(p for p in Path(args.videos).glob("*.mp4"))

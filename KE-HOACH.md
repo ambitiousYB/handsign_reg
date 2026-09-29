@@ -53,9 +53,10 @@ pip install -r requirements.txt
 python src/selftest.py                              # phải ra "TẤT CẢ ĐỀU ĐẠT"
 ```
 
-Trên Kaggle: upload thư mục `src/` thành một Dataset tên **`vsl-code`**. Giữ
-nguyên tên thư mục `src/` — các notebook tìm code ở `/kaggle/input/*/src`. Mỗi lần
-sửa code thì cập nhật phiên bản dataset này.
+Trên Kaggle: upload thư mục `src/` thành một Dataset tên **`vsl-code`**. Các
+notebook tự dò code theo tên file (`train.py`, `selftest.py`...) nên Kaggle có giữ
+thư mục `src/` hay không đều được. Mỗi lần sửa code thì cập nhật phiên bản dataset
+này (**New Version**), nếu không notebook vẫn chạy code cũ.
 
 ---
 
@@ -85,7 +86,8 @@ clip đã xong sẽ được bỏ qua.
 
 ## Giai đoạn 3 — Huấn luyện (Kaggle GPU)
 
-Notebook **`kaggle_02_train.py`**. Accelerator = **GPU P100**, Internet = On.
+Notebook **`kaggle_02_train.py`**. Accelerator = **GPU T4** (không dùng P100 —
+PyTorch mới trên Kaggle đã bỏ hỗ trợ), Internet = On.
 Input: `vsl-code` và `vsl400-landmarks`.
 
 Notebook tự kiểm tra manifest trước khi tốn giờ GPU: có cột `split`, có đủ train

@@ -184,6 +184,43 @@ class SegmentDetector:
 # Vòng lặp chính
 # ==========================================================================
 
+_FONTS: dict = {}
+
+
+def _font(size: int):
+    if size not in _FONTS:
+        from PIL import ImageFont
+        _FONTS[size] = None
+        for name in ("arial.ttf", "segoeui.ttf", "DejaVuSans.ttf",
+                     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                     "/System/Library/Fonts/Supplemental/Arial.ttf"):
+            try:
+                _FONTS[size] = ImageFont.truetype(name, size)
+                break
+            except OSError:
+                continue
+    return _FONTS[size]
+
+
+def put_text_vi(frame, items):
+    """cv2.putText không vẽ được dấu tiếng Việt ('Xe đạp' -> 'Xe ??p'), nên
+    vẽ bằng Pillow. items: [(chuỗi, (x, y_đường_chân_chữ), cỡ_px, màu_BGR)]."""
+    try:
+        from PIL import Image, ImageDraw
+        fonts = [_font(size) for _, _, size, _ in items]
+    except ImportError:
+        fonts = [None]
+    if None in fonts:
+        for text, org, size, bgr in items:
+            cv2.putText(frame, text, org, cv2.FONT_HERSHEY_SIMPLEX, size / 32, bgr, 1)
+        return
+    img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    dr = ImageDraw.Draw(img)
+    for (text, org, _, bgr), f in zip(items, fonts):
+        dr.text(org, text, font=f, fill=tuple(bgr[::-1]), anchor="ls")
+    frame[:] = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+
+
 def draw_overlay(frame, state_name, energy, cfg, gloss_buf, sentence, fps, last):
     h, w = frame.shape[:2]
     cv2.rectangle(frame, (0, 0), (w, 92), (22, 22, 26), -1)
@@ -202,14 +239,11 @@ def draw_overlay(frame, state_name, energy, cfg, gloss_buf, sentence, fps, last)
     cv2.line(frame, (x_hi, 12), (x_hi, 38), (80, 80, 240), 2)
     cv2.line(frame, (x_lo, 12), (x_lo, 38), (80, 200, 240), 1)
 
+    items = [("GLOSS: " + " ".join(gloss_buf[-8:]), (14, h - 46), 18, (200, 200, 200)),
+             (sentence[:70], (14, h - 16), 22, (255, 255, 255))]
     if last:
-        cv2.putText(frame, last, (14, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.62,
-                    (240, 240, 120), 2)
-
-    cv2.putText(frame, "GLOSS: " + " ".join(gloss_buf[-8:]), (14, h - 46),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.55, (200, 200, 200), 1)
-    cv2.putText(frame, sentence[:70], (14, h - 16),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.62, (255, 255, 255), 2)
+        items.append((last, (14, 72), 22, (240, 240, 120)))
+    put_text_vi(frame, items)
     return frame
 
 
@@ -229,6 +263,9 @@ def main():
     ap.add_argument("--dict", default="configs/gloss_vi.json")
     ap.add_argument("--log", default="", help="ghi nhật ký gloss ra file jsonl")
     ap.add_argument("--no-window", action="store_true")
+    ap.add_argument("--no-flip", action="store_true",
+                    help="đưa ảnh webcam GỐC (không lật gương) vào nhận diện; màn hình "
+                         "vẫn hiện kiểu gương. Dùng khi video huấn luyện không phải ảnh gương")
     args = ap.parse_args()
 
     cfg = StreamConfig()
@@ -271,8 +308,12 @@ def main():
             ok, frame = cap.read()
             if not ok:
                 break
+            # frame: ảnh đưa vào nhận diện; view: ảnh hiển thị (webcam luôn hiện kiểu gương)
+            view = frame
             if not args.video:
-                frame = cv2.flip(frame, 1)
+                view = cv2.flip(frame, 1)
+                if not args.no_flip:
+                    frame = view
 
             now = time.time()
             dt = max(now - t_prev, 1e-4)
@@ -315,9 +356,9 @@ def main():
                     last_msg = f"? {name} ({conf:.2f}) - dưới ngưỡng"
 
             if not args.no_window:
-                frame = draw_overlay(frame, names[det.state], energy, cfg,
-                                     gloss_buf, sentence, fps_ema, last_msg)
-                cv2.imshow("VSL streaming", frame)
+                view = draw_overlay(view.copy(), names[det.state], energy, cfg,
+                                    gloss_buf, sentence, fps_ema, last_msg)
+                cv2.imshow("VSL streaming", view)
                 k = cv2.waitKey(1) & 0xFF
                 if k == ord("q"):
                     break

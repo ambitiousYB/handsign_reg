@@ -1,14 +1,608 @@
 {
-  "_ghi_chú": "Mở rộng từ điển ở đây. Khoá = nhãn lớp viết HOA, dấu cách thay bằng '-'.",
-  "_định_dạng": {"vi": "từ tiếng Việt", "pos": "NOUN|VERB|ADJ|PRON|TIME|NEG|WH"},
-  "BỘ-Y-TẾ": {"vi": "bộ y tế", "pos": "NOUN"},
-  "PHÒNG-XÉT-NGHIỆM": {"vi": "phòng xét nghiệm", "pos": "NOUN"},
-  "LÂY-BỆNH": {"vi": "lây bệnh", "pos": "VERB"},
-  "XUẤT-VIỆN": {"vi": "xuất viện", "pos": "VERB"},
-  "ĂN-MỪNG": {"vi": "ăn mừng", "pos": "VERB"},
-  "ÁP-DỤNG": {"vi": "áp dụng", "pos": "VERB"},
-  "SỬ-DỤNG": {"vi": "sử dụng", "pos": "VERB"},
-  "BAN-ĐÊM": {"vi": "ban đêm", "pos": "TIME"},
-  "CON-GẤU": {"vi": "con gấu", "pos": "NOUN"},
-  "VIRUS": {"vi": "virus", "pos": "NOUN"}
+ "_ghi_chú": "Từ điển cho đúng 150 gloss trong keep_labels.txt. Khoá = nhãn viết HOA, dấu cách thay bằng '-'.",
+ "_định_dạng": {
+  "vi": "từ tiếng Việt",
+  "pos": "NOUN|VERB|ADJ|PRON|TIME|NEG|WH"
+ },
+ "THỨC-DẬY": {
+  "vi": "thức dậy",
+  "pos": "VERB"
+ },
+ "NGHE": {
+  "vi": "nghe",
+  "pos": "VERB"
+ },
+ "DỄ": {
+  "vi": "dễ",
+  "pos": "ADJ"
+ },
+ "NẶNG": {
+  "vi": "nặng",
+  "pos": "ADJ"
+ },
+ "BỆNH-VIỆN": {
+  "vi": "bệnh viện",
+  "pos": "NOUN"
+ },
+ "NHÀ": {
+  "vi": "nhà",
+  "pos": "NOUN"
+ },
+ "TRƯỜNG-HỌC": {
+  "vi": "trường học",
+  "pos": "NOUN"
+ },
+ "XA": {
+  "vi": "xa",
+  "pos": "ADJ"
+ },
+ "MÙA-HÈ": {
+  "vi": "mùa hè",
+  "pos": "TIME"
+ },
+ "CHẠY": {
+  "vi": "chạy",
+  "pos": "VERB"
+ },
+ "NGÀY": {
+  "vi": "ngày",
+  "pos": "TIME"
+ },
+ "CẢM-ƠN": {
+  "vi": "cảm ơn",
+  "pos": "VERB"
+ },
+ "NẮNG": {
+  "vi": "nắng",
+  "pos": "ADJ"
+ },
+ "NGHỈ-NGƠI": {
+  "vi": "nghỉ ngơi",
+  "pos": "VERB"
+ },
+ "ĐI": {
+  "vi": "đi",
+  "pos": "VERB"
+ },
+ "ƯỚT": {
+  "vi": "ướt",
+  "pos": "ADJ"
+ },
+ "KHÓC": {
+  "vi": "khóc",
+  "pos": "VERB"
+ },
+ "ĂN": {
+  "vi": "ăn",
+  "pos": "VERB"
+ },
+ "NHẸ": {
+  "vi": "nhẹ",
+  "pos": "ADJ"
+ },
+ "EM": {
+  "vi": "em",
+  "pos": "PRON"
+ },
+ "ANH": {
+  "vi": "anh",
+  "pos": "PRON"
+ },
+ "THƠM": {
+  "vi": "thơm",
+  "pos": "ADJ"
+ },
+ "ĐỒNG-Ý": {
+  "vi": "đồng ý",
+  "pos": "VERB"
+ },
+ "CHỊ": {
+  "vi": "chị",
+  "pos": "PRON"
+ },
+ "THÍCH": {
+  "vi": "thích",
+  "pos": "VERB"
+ },
+ "RỬA-TAY": {
+  "vi": "rửa tay",
+  "pos": "VERB"
+ },
+ "CHO": {
+  "vi": "cho",
+  "pos": "VERB"
+ },
+ "GIƯỜNG": {
+  "vi": "giường",
+  "pos": "NOUN"
+ },
+ "LÀM-VIỆC": {
+  "vi": "làm việc",
+  "pos": "VERB"
+ },
+ "NGHỀ-NGHIỆP": {
+  "vi": "nghề nghiệp",
+  "pos": "NOUN"
+ },
+ "LẠNH": {
+  "vi": "lạnh",
+  "pos": "ADJ"
+ },
+ "MUỐN": {
+  "vi": "muốn",
+  "pos": "VERB"
+ },
+ "CÔ": {
+  "vi": "cô",
+  "pos": "PRON"
+ },
+ "XÔI": {
+  "vi": "xôi",
+  "pos": "NOUN"
+ },
+ "MÁY-GIẶT": {
+  "vi": "máy giặt",
+  "pos": "NOUN"
+ },
+ "QUẠT-(ĐỨNG)": {
+  "vi": "quạt",
+  "pos": "NOUN"
+ },
+ "CON-HEO": {
+  "vi": "con heo",
+  "pos": "NOUN"
+ },
+ "BÂY-GIỜ": {
+  "vi": "bây giờ",
+  "pos": "TIME",
+  "tense": "pres"
+ },
+ "TAXI": {
+  "vi": "taxi",
+  "pos": "NOUN"
+ },
+ "Ô-TÔ": {
+  "vi": "ô tô",
+  "pos": "NOUN"
+ },
+ "HẸP": {
+  "vi": "hẹp",
+  "pos": "ADJ"
+ },
+ "TIVI": {
+  "vi": "tivi",
+  "pos": "NOUN"
+ },
+ "MÙA-ĐÔNG": {
+  "vi": "mùa đông",
+  "pos": "TIME"
+ },
+ "ĐAU": {
+  "vi": "đau",
+  "pos": "VERB"
+ },
+ "CHÚ-Ý": {
+  "vi": "chú ý",
+  "pos": "VERB"
+ },
+ "BỐ": {
+  "vi": "bố",
+  "pos": "NOUN"
+ },
+ "MÁY-ĐIỀU-HÒA": {
+  "vi": "máy điều hòa",
+  "pos": "NOUN"
+ },
+ "CÁI-ĐÈN": {
+  "vi": "cái đèn",
+  "pos": "NOUN"
+ },
+ "MÀU-NÂU": {
+  "vi": "màu nâu",
+  "pos": "ADJ"
+ },
+ "NGÀY-NHÀ-GIÁO-VIỆT-NAM": {
+  "vi": "ngày Nhà giáo Việt Nam",
+  "pos": "TIME"
+ },
+ "MÀU-VÀNG": {
+  "vi": "màu vàng",
+  "pos": "ADJ"
+ },
+ "HÁT": {
+  "vi": "hát",
+  "pos": "VERB"
+ },
+ "DƠ": {
+  "vi": "dơ",
+  "pos": "ADJ"
+ },
+ "CHỦ-NHẬT": {
+  "vi": "chủ nhật",
+  "pos": "TIME"
+ },
+ "DÌ": {
+  "vi": "dì",
+  "pos": "PRON"
+ },
+ "CÁI-BÀN": {
+  "vi": "cái bàn",
+  "pos": "NOUN"
+ },
+ "ĐẸP-(NGƯỜI)": {
+  "vi": "đẹp",
+  "pos": "ADJ"
+ },
+ "THÚ-VỊ": {
+  "vi": "thú vị",
+  "pos": "ADJ"
+ },
+ "NÓI": {
+  "vi": "nói",
+  "pos": "VERB"
+ },
+ "TỈNH": {
+  "vi": "tỉnh",
+  "pos": "NOUN"
+ },
+ "TIẾP-TỤC": {
+  "vi": "tiếp tục",
+  "pos": "VERB"
+ },
+ "CỬA-SỔ": {
+  "vi": "cửa sổ",
+  "pos": "NOUN"
+ },
+ "DÀI": {
+  "vi": "dài",
+  "pos": "ADJ"
+ },
+ "TÀU-HỎA": {
+  "vi": "tàu hỏa",
+  "pos": "NOUN"
+ },
+ "CHÁU": {
+  "vi": "cháu",
+  "pos": "PRON"
+ },
+ "TỪ-CHỐI": {
+  "vi": "từ chối",
+  "pos": "VERB"
+ },
+ "NÊN": {
+  "vi": "nên",
+  "pos": "VERB"
+ },
+ "GHÉT": {
+  "vi": "ghét",
+  "pos": "VERB"
+ },
+ "BÁC": {
+  "vi": "bác",
+  "pos": "PRON"
+ },
+ "MÙA-THU": {
+  "vi": "mùa thu",
+  "pos": "TIME"
+ },
+ "XEM": {
+  "vi": "xem",
+  "pos": "VERB"
+ },
+ "GỐI-(ĐẦU)": {
+  "vi": "gối",
+  "pos": "NOUN"
+ },
+ "THỨ-SÁU": {
+  "vi": "thứ sáu",
+  "pos": "TIME"
+ },
+ "GIÓ": {
+  "vi": "gió",
+  "pos": "NOUN"
+ },
+ "NHẠT": {
+  "vi": "nhạt",
+  "pos": "ADJ"
+ },
+ "CÁI-NỒI": {
+  "vi": "cái nồi",
+  "pos": "NOUN"
+ },
+ "UỐNG": {
+  "vi": "uống",
+  "pos": "VERB"
+ },
+ "BÁNH-CHƯNG": {
+  "vi": "bánh chưng",
+  "pos": "NOUN"
+ },
+ "XIN-LỖI": {
+  "vi": "xin lỗi",
+  "pos": "VERB"
+ },
+ "NGỌT": {
+  "vi": "ngọt",
+  "pos": "ADJ"
+ },
+ "GIÀU": {
+  "vi": "giàu",
+  "pos": "ADJ"
+ },
+ "HỌ-HÀNG": {
+  "vi": "họ hàng",
+  "pos": "NOUN"
+ },
+ "NGÀY-QUỐC-TẾ-PHỤ-NỮ": {
+  "vi": "ngày Quốc tế Phụ nữ",
+  "pos": "TIME"
+ },
+ "CẬU": {
+  "vi": "cậu",
+  "pos": "PRON"
+ },
+ "NỒI-CƠM-ĐIỆN": {
+  "vi": "nồi cơm điện",
+  "pos": "NOUN"
+ },
+ "BÁNH-TÉT": {
+  "vi": "bánh tét",
+  "pos": "NOUN"
+ },
+ "CÁI-CHẢO": {
+  "vi": "cái chảo",
+  "pos": "NOUN"
+ },
+ "ÔNG-NỘI": {
+  "vi": "ông nội",
+  "pos": "NOUN"
+ },
+ "TƯỜNG": {
+  "vi": "tường",
+  "pos": "NOUN"
+ },
+ "SỚM": {
+  "vi": "sớm",
+  "pos": "ADJ"
+ },
+ "BÁC-SĨ": {
+  "vi": "bác sĩ",
+  "pos": "NOUN"
+ },
+ "CÁI-CỬA": {
+  "vi": "cái cửa",
+  "pos": "NOUN"
+ },
+ "TỦ-LẠNH": {
+  "vi": "tủ lạnh",
+  "pos": "NOUN"
+ },
+ "LỄ-TÂN": {
+  "vi": "lễ tân",
+  "pos": "NOUN"
+ },
+ "RỘNG": {
+  "vi": "rộng",
+  "pos": "ADJ"
+ },
+ "ĐỒ-DÙNG": {
+  "vi": "đồ dùng",
+  "pos": "NOUN"
+ },
+ "TRƯỜNG-ĐẠI-HỌC": {
+  "vi": "trường đại học",
+  "pos": "NOUN"
+ },
+ "BÀ-NỘI": {
+  "vi": "bà nội",
+  "pos": "NOUN"
+ },
+ "CHÚ": {
+  "vi": "chú",
+  "pos": "PRON"
+ },
+ "CÁI-GHẾ": {
+  "vi": "cái ghế",
+  "pos": "NOUN"
+ },
+ "VỢ": {
+  "vi": "vợ",
+  "pos": "NOUN"
+ },
+ "MÙA-KHÔ": {
+  "vi": "mùa khô",
+  "pos": "TIME"
+ },
+ "NGẮN": {
+  "vi": "ngắn",
+  "pos": "ADJ"
+ },
+ "CHƠI-CỜ": {
+  "vi": "chơi cờ",
+  "pos": "VERB"
+ },
+ "LƯỜI-BIẾNG": {
+  "vi": "lười biếng",
+  "pos": "ADJ"
+ },
+ "ĐỒNG-HỒ-ĐEO-TAY": {
+  "vi": "đồng hồ đeo tay",
+  "pos": "NOUN"
+ },
+ "GIÚP-ĐỠ": {
+  "vi": "giúp đỡ",
+  "pos": "VERB"
+ },
+ "RẠP-CHIẾU-PHIM": {
+  "vi": "rạp chiếu phim",
+  "pos": "NOUN"
+ },
+ "ÔNG-NGOẠI": {
+  "vi": "ông ngoại",
+  "pos": "NOUN"
+ },
+ "MỀN": {
+  "vi": "mền",
+  "pos": "NOUN"
+ },
+ "THÁNG-MƯỜI": {
+  "vi": "tháng mười",
+  "pos": "TIME"
+ },
+ "CỨNG": {
+  "vi": "cứng",
+  "pos": "ADJ"
+ },
+ "CHÌA-KHÓA": {
+  "vi": "chìa khóa",
+  "pos": "NOUN"
+ },
+ "PHƠI-ĐỒ": {
+  "vi": "phơi đồ",
+  "pos": "VERB"
+ },
+ "KHÔNG-NÊN": {
+  "vi": "không nên",
+  "pos": "VERB"
+ },
+ "NGÂN-HÀNG": {
+  "vi": "ngân hàng",
+  "pos": "NOUN"
+ },
+ "BÓNG-RỔ": {
+  "vi": "bóng rổ",
+  "pos": "NOUN"
+ },
+ "THÀNH-PHỐ": {
+  "vi": "thành phố",
+  "pos": "NOUN"
+ },
+ "CA-SĨ": {
+  "vi": "ca sĩ",
+  "pos": "NOUN"
+ },
+ "NHANH": {
+  "vi": "nhanh",
+  "pos": "ADJ"
+ },
+ "QUÁN-CÀ-PHÊ": {
+  "vi": "quán cà phê",
+  "pos": "NOUN"
+ },
+ "NHÀ-SÁCH": {
+  "vi": "nhà sách",
+  "pos": "NOUN"
+ },
+ "NHÀ-HÀNG": {
+  "vi": "nhà hàng",
+  "pos": "NOUN"
+ },
+ "NHÀ-TRỌ": {
+  "vi": "nhà trọ",
+  "pos": "NOUN"
+ },
+ "CÔNG-VIÊN": {
+  "vi": "công viên",
+  "pos": "NOUN"
+ },
+ "THỨ-HAI": {
+  "vi": "thứ hai",
+  "pos": "TIME"
+ },
+ "BÓNG-CHUYỀN": {
+  "vi": "bóng chuyền",
+  "pos": "NOUN"
+ },
+ "SIÊU-THỊ": {
+  "vi": "siêu thị",
+  "pos": "NOUN"
+ },
+ "BÚT-CHÌ": {
+  "vi": "bút chì",
+  "pos": "NOUN"
+ },
+ "THỜI-TIẾT": {
+  "vi": "thời tiết",
+  "pos": "NOUN"
+ },
+ "CON-CHÓ": {
+  "vi": "con chó",
+  "pos": "NOUN"
+ },
+ "BÁO-CÁO": {
+  "vi": "báo cáo",
+  "pos": "VERB"
+ },
+ "XE-ĐẠP": {
+  "vi": "xe đạp",
+  "pos": "NOUN"
+ },
+ "THÁNG-MƯỜI-HAI": {
+  "vi": "tháng mười hai",
+  "pos": "TIME"
+ },
+ "CHẬM-CHẠP": {
+  "vi": "chậm chạp",
+  "pos": "ADJ"
+ },
+ "LÀM-BÀI-TẬP": {
+  "vi": "làm bài tập",
+  "pos": "VERB"
+ },
+ "MỀM": {
+  "vi": "mềm",
+  "pos": "ADJ"
+ },
+ "THÁNG-MƯỜI-MỘT": {
+  "vi": "tháng mười một",
+  "pos": "TIME"
+ },
+ "BÚN": {
+  "vi": "bún",
+  "pos": "NOUN"
+ },
+ "DỮ": {
+  "vi": "dữ",
+  "pos": "ADJ"
+ },
+ "TRUNG-QUỐC": {
+  "vi": "Trung Quốc",
+  "pos": "NOUN"
+ },
+ "ĐẸP-(VẬT)": {
+  "vi": "đẹp",
+  "pos": "ADJ"
+ },
+ "NHẢY-DÂY": {
+  "vi": "nhảy dây",
+  "pos": "VERB"
+ },
+ "NẾM": {
+  "vi": "nếm",
+  "pos": "VERB"
+ },
+ "TRUNG-THU": {
+  "vi": "trung thu",
+  "pos": "TIME"
+ },
+ "VỞ": {
+  "vi": "vở",
+  "pos": "NOUN"
+ },
+ "MÀU-HỒNG": {
+  "vi": "màu hồng",
+  "pos": "ADJ"
+ },
+ "THÁNG-HAI": {
+  "vi": "tháng hai",
+  "pos": "TIME"
+ },
+ "LAPTOP": {
+  "vi": "laptop",
+  "pos": "NOUN"
+ },
+ "TRỨNG": {
+  "vi": "trứng",
+  "pos": "NOUN"
+ }
 }
