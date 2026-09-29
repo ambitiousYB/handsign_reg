@@ -1,0 +1,24 @@
+# Môi trường Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Dữ liệu và kết quả huấn luyện — nặng, để trên Kaggle
+landmarks/
+runs/
+models/
+data/
+clips/
+*.npz
+*.tar.gz
+*.pt
+*.onnx
+*.mp4
+
+# IDE / hệ điều hành
+.vscode/
+.idea/
+.ipynb_checkpoints/
+Thumbs.db
+.DS_Store

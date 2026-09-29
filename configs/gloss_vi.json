@@ -1,0 +1,14 @@
+{
+  "_ghi_chú": "Mở rộng từ điển ở đây. Khoá = nhãn lớp viết HOA, dấu cách thay bằng '-'.",
+  "_định_dạng": {"vi": "từ tiếng Việt", "pos": "NOUN|VERB|ADJ|PRON|TIME|NEG|WH"},
+  "BỘ-Y-TẾ": {"vi": "bộ y tế", "pos": "NOUN"},
+  "PHÒNG-XÉT-NGHIỆM": {"vi": "phòng xét nghiệm", "pos": "NOUN"},
+  "LÂY-BỆNH": {"vi": "lây bệnh", "pos": "VERB"},
+  "XUẤT-VIỆN": {"vi": "xuất viện", "pos": "VERB"},
+  "ĂN-MỪNG": {"vi": "ăn mừng", "pos": "VERB"},
+  "ÁP-DỤNG": {"vi": "áp dụng", "pos": "VERB"},
+  "SỬ-DỤNG": {"vi": "sử dụng", "pos": "VERB"},
+  "BAN-ĐÊM": {"vi": "ban đêm", "pos": "TIME"},
+  "CON-GẤU": {"vi": "con gấu", "pos": "NOUN"},
+  "VIRUS": {"vi": "virus", "pos": "NOUN"}
+}

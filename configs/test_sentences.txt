@@ -1,0 +1,18 @@
+# Tập câu dùng để quay video test liên tục.
+# Mỗi dòng: chuỗi gloss cách nhau bằng dấu cách, viết HOA, từ ghép nối bằng '-'.
+# Chỉ dùng gloss nằm trong bộ từ vựng bạn đã huấn luyện.
+TÔI ĐI CHỢ
+HÔM-QUA TÔI HỌC
+BẠN ĂN GÌ
+TÔI ĂN THỨC-ĂN
+NGÀY-MAI TÔI ĐI BỆNH-VIỆN
+TÔI MỆT KHÔNG
+BẠN-THÂN TÔI HỌC-SINH
+TÔI ĐI XE-ĐẠP
+HÔM-NAY TÔI VUI
+TÔI UỐNG KHÔNG
+BẠN ĐI ĐÂU
+TÔI XIN-LỖI BẠN
+HÔM-QUA TÔI SỐT
+TÔI NGHỈ-NGƠI
+BẠN NGHE TÔI KHÔNG
