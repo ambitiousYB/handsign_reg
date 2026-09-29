@@ -92,6 +92,7 @@ class FrameBuffer:
         self.buf: deque[dict] = deque(maxlen=maxlen)
         self.fps = fps
         self._prev_wrist: np.ndarray | None = None
+        self._prev_vis = np.zeros(2, bool)
         self.energy = 0.0
         self._ema = 0.0
 
@@ -108,11 +109,18 @@ class FrameBuffer:
 
         center = (ls + rs) / 2.0
         wr = (pose[[L_WRIST, R_WRIST]] - center) / shoulder
+        # Chỉ tính cổ tay NHÌN THẤY. Tay ngoài khung hình thì MediaPipe vẫn đoán
+        # vị trí cổ tay và điểm đoán nhảy lung tung -> năng lượng ảo cực lớn,
+        # máy trạng thái không bao giờ về IDLE.
+        vis = d["pose_vis"][[L_WRIST, R_WRIST]] > 0.5
         if self._prev_wrist is not None and dt > 1e-4:
-            v = float(np.linalg.norm(wr - self._prev_wrist, axis=1).mean() / dt)
+            m = vis & self._prev_vis
+            step = np.linalg.norm(wr - self._prev_wrist, axis=1)
+            v = float(step[m].mean() / dt) if m.any() else 0.0
         else:
             v = 0.0
         self._prev_wrist = wr
+        self._prev_vis = vis
         self._ema = 0.6 * self._ema + 0.4 * v
         self.energy = self._ema
         return self.energy
@@ -231,6 +239,9 @@ def draw_overlay(frame, state_name, energy, cfg, gloss_buf, sentence, fps, last)
     cv2.putText(frame, state_name, (14, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
     cv2.putText(frame, f"{fps:5.1f} FPS", (w - 130, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+    # giá trị năng lượng bằng số, để căn --motion-hi / --motion-lo
+    cv2.putText(frame, f"E={energy:.2f}  hi={cfg.motion_hi:.2f} lo={cfg.motion_lo:.2f}",
+                (w - 300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (180, 180, 180), 1)
 
     bar_w = int(min(energy / (cfg.motion_hi * 2.5), 1.0) * (w - 180))
     cv2.rectangle(frame, (150, 16), (150 + max(bar_w, 2), 34), color, -1)
