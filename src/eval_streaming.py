@@ -95,7 +95,7 @@ def run_video(path: Path, rec: Recognizer, cfg: StreamConfig,
 
             if ev == "end":
                 t0 = time.time()
-                n = min(cfg.max_sign_frames, len(buf.buf))
+                n = det.window_len(len(buf.buf))
                 seq = buf.to_raw(n)
                 seq.fps = fps
                 prob = rec.predict(build_window(seq, SEQ_LEN))

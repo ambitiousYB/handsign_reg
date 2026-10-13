@@ -154,6 +154,13 @@ class SegmentDetector:
         self.quiet = 0
         self.count = 0
         self.cool = 0
+        self.last_len = 0      # số frame của đoạn ký hiệu vừa kết thúc
+
+    def window_len(self, available: int) -> int:
+        """Số frame cuối bộ đệm cần đưa vào mô hình: ĐÚNG đoạn vừa ký + một chút
+        trước đó. Lấy cứng 90 frame gần nhất thì ký hiệu 1 giây bị pha với 2 giây
+        ngồi yên, khác hẳn clip huấn luyện."""
+        return max(1, min(available, self.last_len + self.cfg.pre_roll_frames))
 
     def step(self, energy: float, hands_visible: bool) -> str:
         c = self.cfg
@@ -180,6 +187,7 @@ class SegmentDetector:
 
         if self.quiet >= c.quiet_frames or self.count >= c.max_sign_frames:
             n = self.count
+            self.last_len = n
             self.state = self.COOLDOWN
             self.cool = c.cooldown_frames
             self.count = 0
@@ -338,13 +346,18 @@ def main():
             ev = det.step(energy, hands)
 
             if ev == "end":
-                n = min(det.cfg.max_sign_frames, len(buf.buf))
+                n = det.window_len(len(buf.buf))
                 seq = buf.to_raw(n)
                 seq.fps = fps_ema if fps_ema > 1 else fps_src
                 window = build_window(seq, SEQ_LEN)
                 prob = rec.predict(window)
 
                 order = np.argsort(-prob)
+                # In top-3 ra terminal để thấy mô hình đang "nghĩ" gì, kể cả khi
+                # kết quả dưới ngưỡng và không hiện lên màn hình.
+                print(f"[{n:3d} frame | tay T {seq.lhand_ok.mean():.2f} P {seq.rhand_ok.mean():.2f}] "
+                      + "  ".join(f"{rec.labels[int(i)]} {prob[int(i)]:.2f}" for i in order[:3]),
+                      flush=True)
                 top1, top2 = int(order[0]), int(order[1]) if len(order) > 1 else int(order[0])
                 name = rec.labels[top1]
                 conf, margin = float(prob[top1]), float(prob[top1] - prob[top2])

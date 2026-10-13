@@ -181,6 +181,17 @@ class HolisticExtractor:
         lhand, lok = hand_of(res.left_hand_landmarks)
         rhand, rok = hand_of(res.right_hand_landmarks)
 
+        # MediaPipe trả x theo chiều rộng, y theo chiều cao -> với khung hình không
+        # vuông, hai trục có đơn vị khác nhau. Video VSL400 là 224×224 (vuông) còn
+        # webcam là 640×480: không sửa thì mọi khoảng cách dọc bị kéo dài 4/3 so
+        # với lúc huấn luyện và mô hình nhận sai gần hết. Đưa x về cùng đơn vị với
+        # y (bội số chiều cao). Khung vuông: aspect = 1, dữ liệu cũ không đổi.
+        h, w = frame_rgb.shape[:2]
+        if w != h:
+            aspect = w / h
+            for arr in (pose, face, lhand, rhand):
+                arr[:, 0] *= aspect
+
         return dict(
             pose=pose, pose_vis=pose_vis, pose_ok=pose_ok,
             lhand=lhand, lhand_ok=lok,

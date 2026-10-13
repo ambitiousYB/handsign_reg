@@ -76,6 +76,7 @@ class StreamConfig:
     min_sign_frames: int = 10    # đoạn ngắn hơn -> coi là nhiễu, bỏ
     max_sign_frames: int = 90    # đoạn dài hơn -> cắt cưỡng bức
     cooldown_frames: int = 8     # thời gian nghỉ sau khi phát ra một gloss
+    pre_roll_frames: int = 8     # lấy thêm vài frame TRƯỚC lúc kích hoạt (đoạn giơ tay)
 
     # Ngưỡng chấp nhận kết quả phân loại.
     conf_threshold: float = 0.60
