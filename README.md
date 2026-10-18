@@ -1,3 +1,13 @@
+# Lưu ý từ Hùng:
+Hướng dẫn cách tìm từ mà model nhận diện chính xác: 
+* Với mỗi từ thì chú ý tới góc máy bắt được cả thân nếu hành động xuất phát từ trạng thái tay buông thõng.
+* Nếu thao tác cho từ đang thử mà bị model nhận diện sai sang từ khác, rất có thể từ được nhận diện kia model lại nhận diện được, hãy chuyển sang từ đó thử. Ví dụ: Thử "Ăn" mà model nhận diện là "Thức dậy", hãy thử "Thức dậy".
+
+Sau khi thử nghiệm với phương pháp trên cho khoảng vài chục từ đầu danh sách tập test (sử dụng notebook này để xem các video thao tác: https://www.kaggle.com/code/ambitiousyb/to-watch-video-3d9566), thì đây là danh sách từ mà model nhận diện tốt (31 từ):
+Anh, Bà nội, Bác, Bác sĩ, Bánh chưng, Chơi cờ, Bánh tét, Vở, Báo cáo, Bây giờ, Rộng, Lễ tân, Cho, Cảm ơn, Giúp đỡ, Đồ dùng, Bóng chuyền, Bóng rổ, Máy giặt, Bún, Ăn, Muốn, Bút chì, Thức dậy, Xa, Xe đạp, Chạy, Trung Quốc, Uống, Khóc, Nói. (Có thể thử thêm để tìm thêm nhưng hiện tại bằng này từ đủ để demo rồi;))
+
+Để chạy model, gõ lệnh vào terminal: python src/stream.py --ckpt models/best.pt --conf 0.6
+
 # VSL Streaming — Nhận diện ngôn ngữ ký hiệu tiếng Việt thời gian thực
 
 Pipeline hoàn chỉnh: video → landmark → mô hình chuỗi → gloss → câu tiếng Việt,
