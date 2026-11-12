@@ -117,6 +117,25 @@ Phân vai D1–D4 xem `PHAN-CONG.md`.
 - [ ] **E2 — ST-GCN**: **chưa có** trong `models.py` (`--model` chỉ nhận
   `bilstm`, `transformer`). Chỉ làm nếu còn thời gian.
 
+### G. Mở rộng lên toàn bộ 472 gloss + nâng độ chính xác
+
+- [ ] **G1** Cập nhật `vsl-code` (New Version) — bắt buộc, notebook mới cần code mới.
+- [ ] **G2** Chạy `notebooks/kaggle_01b_extract_rest.py` với `N_SHARDS = 1`
+  (**Save & Run All**). Phần còn lại chỉ ~10 clip/gloss (~3.000 clip train),
+  khoảng 3–4 giờ. Kaggle đã lên Python 3.13 nên notebook tự dựng Python 3.12
+  riêng bằng `uv` để cài được `mediapipe==0.10.14`. Mỗi bản xong → Output → New Dataset `vsl-landmarks-part{SHARD}`.
+- [ ] **G3** Notebook 02: Add Input `vsl400-landmarks` + 3 `vsl-landmarks-part*`.
+  Ô nạp landmark tự gộp tất cả. Kiểm tra dòng "Số gloss" ≈ 472.
+- [ ] **G4** Huấn luyện: `bilstm_provided`, `transformer_provided`,
+  `transformer_mirror` (`--mirror-p 0.5`), rồi chạy ô **Ensemble**.
+- [ ] **G5** So sánh với bài báo: chỉ so được khi **cùng dataset, cùng số gloss,
+  cùng phép chia train/test**. Ghi rõ điều kiện đó trong báo cáo.
+
+Kỳ vọng thực tế: 472 gloss khó hơn 150 (nhiều gloss ít mẫu), accuracy offline
+sẽ GIẢM so với 87–89% — đó là bình thường, không phải lỗi. Độ chính xác khi
+dùng webcam thật phụ thuộc chủ yếu vào việc fine-tune bằng dữ liệu tự quay
+(mục B) chứ không phụ thuộc số gloss.
+
 ### F. Báo cáo — Giai đoạn 7
 
 - [ ] Viết theo dàn ý ở mục "Giai đoạn 7" bên dưới, dùng bảng "Những con số phải có".
@@ -346,6 +365,7 @@ Chạy ở vài mức `--conf` để dựng đường cong đánh đổi giữa 
 |---|---|---|
 | `SystemExit: Upload thư mục src/...` | Kaggle đặt file dataset ở gốc, không giữ thư mục `src/` | notebook dò code theo tên file |
 | `Không thấy frame_splited` | đường mount Kaggle khác (`/kaggle/input/datasets/<owner>/<slug>/`) | notebook tự dò, chỉ lấy `processed/` |
+| `No module named 'mediapipe'` (log có `python3.13`) | Kaggle lên Python 3.13, `mediapipe==0.10.14` chỉ có tới 3.12 | dựng Python 3.12 riêng bằng `uv` (notebook 01b) |
 | `ImportError: runtime_version from google.protobuf` | mediapipe hạ protobuf → tensorflow có sẵn của Kaggle import hỏng | `pip uninstall -y tensorflow` trong notebook 01 |
 | Log traceback lặp vô hạn khi trích xuất | initializer của `Pool` lỗi → Pool tạo lại worker mãi | `extract_dataset.py` thử MediaPipe trước, lỗi thì dừng |
 | `no kernel image is available` | GPU P100 không còn được PyTorch hỗ trợ | dùng GPU T4 |

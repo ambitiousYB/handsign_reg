@@ -85,6 +85,9 @@ def main():
     ap.add_argument("--dropout", type=float, default=0.3)
     ap.add_argument("--nosign-ratio", type=float, default=0.12,
                     help="tỉ lệ mẫu 'không phải ký hiệu' sinh thêm khi huấn luyện")
+    ap.add_argument("--mirror-p", type=float, default=0.0,
+                    help="xác suất lật gương mỗi mẫu train (mô phỏng người thuận tay "
+                         "trái / webcam lật ảnh). Thử 0.5; so với 0 để biết có lợi không.")
     ap.add_argument("--min-per-class", type=int, default=8,
                     help="loại nhãn có quá ít mẫu")
     ap.add_argument("--top-k-classes", type=int, default=0,
@@ -143,7 +146,8 @@ def main():
 
     cache = not args.no_cache
     ds_tr = SignDataset(df, splits["train"], label_to_idx, cfg, train=True,
-                        cache=False, nosign_ratio=args.nosign_ratio)
+                        cache=False, nosign_ratio=args.nosign_ratio,
+                        mirror_p=args.mirror_p)
     ds_va = SignDataset(df, splits["val"], label_to_idx, cfg, train=False, cache=cache)
     ds_te = SignDataset(df, splits["test"], label_to_idx, cfg, train=False, cache=cache)
 
@@ -248,7 +252,12 @@ def main():
           f"macro-F1 {m_te['macro_f1']:.4f}  top5 {m_te['top5']:.4f}")
     print("=" * 58)
 
-    np.savez(out / "test_preds.npz", y=y, pred=pred, prob=prob)
+    # Lưu kèm npz + split gốc của từng clip test (cùng thứ tự với y/pred) để phân
+    # tích sau mà KHÔNG phải dựng lại phép chia (dựng lại dễ lệch vì bước lọc nhãn).
+    te = df.iloc[splits["test"]]
+    np.savez(out / "test_preds.npz", y=y, pred=pred, prob=prob,
+             npz=np.asarray(te["npz"].astype(str), dtype=str),          # dtype chuỗi,
+             orig_split=np.asarray(te["split"].fillna("").astype(str), dtype=str))  # không pickle
     (out / "test_metrics.json").write_text(
         json.dumps(dict(split_mode=args.split_mode, **m_te), indent=2), encoding="utf-8")
     pd.DataFrame(history).to_csv(out / "history.csv", index=False)

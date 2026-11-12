@@ -380,6 +380,11 @@ def main():
                     last_msg = f"? {name} ({conf:.2f}) - dưới ngưỡng"
 
             if not args.no_window:
+                # Chỉ phóng to ẢNH HIỂN THỊ (video dataset 224×224 bị thanh trạng
+                # thái che gần hết). Ảnh đưa vào MediaPipe ở trên không bị đụng tới.
+                if view.shape[0] < 480:
+                    s = 480 / view.shape[0]
+                    view = cv2.resize(view, None, fx=s, fy=s)
                 view = draw_overlay(view.copy(), names[det.state], energy, cfg,
                                     gloss_buf, sentence, fps_ema, last_msg)
                 cv2.imshow("VSL streaming", view)

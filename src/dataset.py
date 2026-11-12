@@ -48,9 +48,38 @@ class Augment:
     phỏng sai số của chính bước chuẩn hoá.
     """
 
-    def __init__(self, cfg: TrainConfig, mirror: bool = False):
+    # Hoán vị trái <-> phải khi lật gương, theo thứ tự trong POSE_IDX / FACE_IDX
+    # (config.py). Pose: mũi, vai T/P, khuỷu T/P, cổ tay T/P, hông T/P.
+    POSE_MIRROR = [0, 2, 1, 4, 3, 6, 5, 8, 7]
+    # Face: 61↔291, 78↔308, 40↔270, 33↔263, 133↔362, 159↔386, 145↔374, 70↔300;
+    # 0, 17, 13, 14 nằm trên trục giữa.
+    FACE_MIRROR = [1, 0, 2, 3, 4, 5, 7, 6, 9, 8, 13, 12, 11, 10, 16, 17, 14, 15, 19, 18]
+
+    def __init__(self, cfg: TrainConfig, mirror_p: float = 0.0):
         self.cfg = cfg
-        self.mirror = mirror
+        self.mirror_p = mirror_p
+
+    def mirror(self, seq: RawSequence, rng: np.random.Generator) -> RawSequence:
+        """Lật gương cả chuỗi: mô phỏng người ký thuận tay trái, hoặc webcam lật
+        ảnh. Đổi x -> 1 - x VÀ đổi chỗ mọi cặp điểm trái/phải (kể cả hai bàn tay),
+        nếu không thì "vai trái" sẽ nằm bên phải, sai giải phẫu."""
+        if self.mirror_p <= 0 or rng.random() >= self.mirror_p:
+            return seq
+
+        def flip_x(a: np.ndarray) -> np.ndarray:
+            a = a.copy()
+            a[..., 0] = np.where(a[..., 0] != 0, 1.0 - a[..., 0], 0.0)  # 0 = thiếu điểm
+            return a
+
+        return RawSequence(
+            pose=flip_x(seq.pose)[:, self.POSE_MIRROR],
+            pose_vis=seq.pose_vis[:, self.POSE_MIRROR],
+            pose_ok=seq.pose_ok,
+            lhand=flip_x(seq.rhand), rhand=flip_x(seq.lhand),
+            lhand_ok=seq.rhand_ok, rhand_ok=seq.lhand_ok,
+            face=flip_x(seq.face)[:, self.FACE_MIRROR],
+            fps=seq.fps,
+        )
 
     def temporal(self, seq: RawSequence, rng: np.random.Generator) -> RawSequence:
         T = len(seq)
@@ -116,7 +145,7 @@ class SignDataset(Dataset):
         cfg: TrainConfig,
         train: bool = False,
         cache: bool = True,
-        mirror: bool = False,
+        mirror_p: float = 0.0,
         nosign_ratio: float = 0.0,
     ):
         self.df = df.reset_index(drop=True)
@@ -124,7 +153,7 @@ class SignDataset(Dataset):
         self.label_to_idx = label_to_idx
         self.cfg = cfg
         self.train = train
-        self.aug = Augment(cfg, mirror=mirror) if train else None
+        self.aug = Augment(cfg, mirror_p=mirror_p) if train else None
         self.nosign_ratio = nosign_ratio if train else 0.0
         self.nosign_idx = label_to_idx.get(NOSIGN_LABEL, -1)
 
@@ -149,6 +178,7 @@ class SignDataset(Dataset):
 
         seq = RawSequence.from_npz(self.df.iloc[row_i]["npz"])
         if self.aug is not None:
+            seq = self.aug.mirror(seq, rng)
             seq = self.aug.temporal(seq, rng)
             seq = self.aug.hand_dropout(seq, rng)
         return featurize(seq)
