@@ -13,7 +13,8 @@ Phân vai D1–D4 xem `PHAN-CONG.md`.
 | 1. Chuẩn bị | ✅ Xong |
 | 2. Trích xuất landmark | ✅ Xong — dataset `vsl400-landmarks` |
 | 3. Huấn luyện | ✅ Xong — BiLSTM provided/random, Transformer provided |
-| — Mô hình chạy trên laptop | ✅ `models/vsl.onnx` (BiLSTM provided) chạy được bằng `stream.py` |
+| — Mở rộng 451 gloss | ✅ Transformer 92,5% — xem mục G |
+| — Mô hình chạy trên laptop | ✅ `models/vsl.onnx` (Transformer 451 gloss) chạy được bằng `stream.py` |
 | 4. Quay dữ liệu | ⏳ Chưa — **chờ chốt chuyện lật ảnh (việc A2)** |
 | 5. Huấn luyện lần cuối | ⏳ Chưa — cần viết `notebooks/kaggle_03_final.py` |
 | 6. Demo và đo streaming | ⏳ Chưa |
@@ -119,22 +120,40 @@ Phân vai D1–D4 xem `PHAN-CONG.md`.
 
 ### G. Mở rộng lên toàn bộ 472 gloss + nâng độ chính xác
 
-- [ ] **G1** Cập nhật `vsl-code` (New Version) — bắt buộc, notebook mới cần code mới.
-- [ ] **G2** Chạy `notebooks/kaggle_01b_extract_rest.py` với `N_SHARDS = 1`
-  (**Save & Run All**). Phần còn lại chỉ ~10 clip/gloss (~3.000 clip train),
-  khoảng 3–4 giờ. Kaggle đã lên Python 3.13 nên notebook tự dựng Python 3.12
-  riêng bằng `uv` để cài được `mediapipe==0.10.14`. Mỗi bản xong → Output → New Dataset `vsl-landmarks-part{SHARD}`.
-- [ ] **G3** Notebook 02: Add Input `vsl400-landmarks` + 3 `vsl-landmarks-part*`.
-  Ô nạp landmark tự gộp tất cả. Kiểm tra dòng "Số gloss" ≈ 472.
-- [ ] **G4** Huấn luyện: `bilstm_provided`, `transformer_provided`,
-  `transformer_mirror` (`--mirror-p 0.5`), rồi chạy ô **Ensemble**.
+- [x] **G1–G3** Đã trích đủ landmark (dataset `vsl400-landmarks` + `vsl400-landmarks-part2`)
+  và gộp trong notebook 02. 21 gloss có < 8 clip bị loại → **451 gloss**.
+- [x] **G4** Đã huấn luyện `bilstm_provided`, `bilstm_random`, `transformer_provided`.
+  `transformer_mirror` CHƯA chạy (vsl-code trên Kaggle còn code cũ, thiếu `--mirror-p`) — tuỳ chọn.
+- [x] **Kiểm tra rò rỉ** (`notebooks/kaggle_04_check_leak.py`): KHÔNG có bằng chứng —
+  0 mã video chung train/test; tỉ lệ clip test gần trùng train (dmin < 0,05) là
+  1,2% (150 gloss cũ) và 1,0% (gloss mới), phân bố khoảng cách hai nhóm như nhau.
 - [ ] **G5** So sánh với bài báo: chỉ so được khi **cùng dataset, cùng số gloss,
   cùng phép chia train/test**. Ghi rõ điều kiện đó trong báo cáo.
 
-Kỳ vọng thực tế: 472 gloss khó hơn 150 (nhiều gloss ít mẫu), accuracy offline
-sẽ GIẢM so với 87–89% — đó là bình thường, không phải lỗi. Độ chính xác khi
-dùng webcam thật phụ thuộc chủ yếu vào việc fine-tune bằng dữ liệu tự quay
-(mục B) chứ không phụ thuộc số gloss.
+**Kết quả 451 gloss** (phép chia có sẵn, 5.266 clip test; dữ liệu: 21.156 clip train):
+
+| Mô hình | Accuracy | Macro-F1 | Top-5 |
+|---|---|---|---|
+| BiLSTM — `random` | 89,8% | 89,4% | 98,0% |
+| BiLSTM — `provided` | 90,7% | 91,0% | 98,1% |
+| **Transformer — `provided`** | **92,5%** | **92,8%** | 98,4% |
+| Ensemble BiLSTM + Transformer | 92,5% | 92,6% | 98,5% |
+
+- Transformer tốt nhất; ensemble không tăng (BiLSTM yếu hơn kéo xuống) → dùng
+  Transformer một mình. Đã xuất `models/vsl.onnx` (451 gloss); bản 150 gloss cũ
+  lưu ở `models/old150/`.
+- Theo nhóm: 150 gloss cũ 89,3% (2.162 clip test) — gloss mới 94,8% (3.125 clip
+  test). Gloss mới có ~39 clip train/gloss (12.492 clip), và nhóm 150 gloss cũ
+  chứa các cặp rất giống nhau (Con heo/Dơ, Bánh chưng/Bánh tét, Chị/Cô).
+- Cặp nhầm nhiều nhất: Con heo ↔ Dơ, Không nên → Nên, Xôi → Ướt, Chị → Cô,
+  Bánh chưng ↔ Bánh tét. Gloss yếu nhất: Quần đùi, Cái quần, Xin phép (2–3 clip test).
+- `random` vẫn KHÔNG cao hơn `provided` (89,8% < 90,7%). Kết hợp với kiểm tra rò
+  rỉ: không thấy video trùng, nhưng cũng không có bằng chứng tập test toàn người
+  ký chưa thấy (dataset không có ID người). Báo cáo gọi đúng tên: "phép chia có
+  sẵn của dataset", không gọi là "người ký chưa thấy".
+
+Độ chính xác khi dùng webcam thật phụ thuộc chủ yếu vào việc fine-tune bằng dữ
+liệu tự quay (mục B, C), không phụ thuộc số gloss.
 
 ### F. Báo cáo — Giai đoạn 7
 
